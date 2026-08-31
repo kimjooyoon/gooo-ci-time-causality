@@ -114,7 +114,7 @@ func Run(options RunOptions) error {
 	if err != nil {
 		return err
 	}
-	operationsData, err := BuildOperations(cases, firstResults)
+	operationsData, err := BuildOperations(cases, firstResults, fixtureData)
 	if err != nil {
 		return err
 	}
@@ -143,6 +143,7 @@ func Run(options RunOptions) error {
 		LocalTestExecutions:       0,
 		CrossProjectRequiredGates: 0,
 		AggregationRule:           "Only same operation_id, run_id, job_id, provider, and clock_domain may form one duration; source-ci and opentofu remain separate observations.",
+		RetryAttempts:             []int{1, 2},
 	}
 	durationData, err := json.MarshalIndent(duration, "", "  ")
 	if err != nil {
@@ -177,6 +178,7 @@ func Run(options RunOptions) error {
 		CrossProjectRequiredGates: 0,
 		RootReadmeInInventory:     false,
 		VerificationAuthority:     "github-actions",
+		RetryAttempts:             []int{1, 2},
 	}
 	manifestData, err := json.MarshalIndent(manifest, "", "  ")
 	if err != nil {
@@ -234,6 +236,7 @@ func clockDomainsJSON() ([]byte, error) {
 		Domains: []clockDomain{
 			{ID: "fixture.utc.v1", Source: "synthetic corpus", ResolutionMS: 1, Comparable: "only within the same operation"},
 			{ID: "github.actions.run.api.v1", Source: "GitHub REST run timestamps", ResolutionMS: 1000, Comparable: "only within the same run operation"},
+			{ID: "github.actions.job.api.v1", Source: "GitHub REST job timestamps", ResolutionMS: 1000, Comparable: "only within the same job operation"},
 		},
 	}
 	return json.MarshalIndent(document, "", "  ")
@@ -263,7 +266,7 @@ func buildHumanReport(manifest Manifest, manifestDigest string, digests []Output
 			fmt.Fprintf(&b, " / duration_ms=%d", *result.DurationMS)
 		}
 		if result.Unknown != nil {
-			fmt.Fprintf(&b, " / unknown(stage=%s,step=%s,reason=%s,unknown_class=%s,next_operation=%s,blocked_by=%s)", result.Unknown.Stage, result.Unknown.Step, result.Unknown.Reason, result.Unknown.UnknownClass, strings.Join(result.Unknown.BlockedBy, ","), result.Unknown.NextOperation)
+			fmt.Fprintf(&b, " / unknown(stage=%s,step=%s,reason=%s,unknown_class=%s,next_operation=%s,blocked_by=%s)", result.Unknown.Stage, result.Unknown.Step, result.Unknown.Reason, result.Unknown.UnknownClass, result.Unknown.NextOperation, strings.Join(result.Unknown.BlockedBy, ","))
 		}
 		b.WriteByte('\n')
 	}
@@ -274,6 +277,7 @@ func buildHumanReport(manifest Manifest, manifestDigest string, digests []Output
 		fmt.Fprintf(&b, "%s: %s bytes=%d\n", digest.Name, digest.SHA256, digest.Bytes)
 	}
 	b.WriteString("time-report.md: digest is intentionally resolved by the GitHub Actions artifact API after upload (self-digest is not embedded).\n")
+	b.WriteString("retry_lineage: ci-effort attempts=1,2 append_only=true; both attempts are retained in operations.ndjson.\n")
 	b.WriteString("\nNo score, average, percentage, or generalized speed claim is emitted.\n")
 	return b.String()
 }

@@ -143,6 +143,8 @@ type Inventory struct {
 }
 
 type OperationLine struct {
+	RecordType     string  `json:"record_type"`
+	LineageID      string  `json:"lineage_id,omitempty"`
 	CaseID         string  `json:"case_id"`
 	ObservationID  string  `json:"observation_id"`
 	OperationID    string  `json:"operation_id"`
@@ -155,6 +157,8 @@ type OperationLine struct {
 	CompletedAt    *string `json:"completed_at"`
 	ArtifactID     string  `json:"artifact_id"`
 	ArtifactDigest string  `json:"artifact_digest"`
+	ArtifactCreatedAt string `json:"artifact_created_at,omitempty"`
+	ArtifactUpdatedAt string `json:"artifact_updated_at,omitempty"`
 	Attempt        int     `json:"attempt"`
 	Decision       string  `json:"decision"`
 }
@@ -174,6 +178,7 @@ type DurationReceipt struct {
 	LocalTestExecutions       int          `json:"local_test_executions"`
 	CrossProjectRequiredGates int          `json:"cross_project_required_gates"`
 	AggregationRule           string       `json:"aggregation_rule"`
+	RetryAttempts             []int        `json:"retry_attempts"`
 }
 
 type ReplayReceipt struct {
@@ -217,4 +222,5 @@ type Manifest struct {
 	CrossProjectRequiredGates int            `json:"cross_project_required_gates"`
 	RootReadmeInInventory     bool           `json:"root_readme_in_inventory"`
 	VerificationAuthority     string         `json:"verification_authority"`
+	RetryAttempts             []int          `json:"retry_attempts"`
 }

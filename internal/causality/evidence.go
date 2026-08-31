@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/fs"
 	"os"
@@ -45,7 +46,7 @@ func ParseCorpus(data []byte) ([]DurationCase, error) {
 	return cases, nil
 }
 
-func BuildOperations(cases []DurationCase, results []CaseResult) ([]byte, error) {
+func BuildOperations(cases []DurationCase, results []CaseResult, fixtureData []byte) ([]byte, error) {
 	decisionByCase := make(map[string]string, len(results))
 	for _, result := range results {
 		decisionByCase[result.CaseID] = result.Decision
@@ -54,6 +55,7 @@ func BuildOperations(cases []DurationCase, results []CaseResult) ([]byte, error)
 	for _, item := range cases {
 		for _, observation := range item.Observations {
 			line := OperationLine{
+				RecordType:     "observation",
 				CaseID:         item.CaseID,
 				ObservationID:  observation.ObservationID,
 				OperationID:    observation.OperationID,
@@ -76,6 +78,57 @@ func BuildOperations(cases []DurationCase, results []CaseResult) ([]byte, error)
 			b.Write(data)
 			b.WriteByte('\n')
 		}
+	}
+	var fixture struct {
+		CI struct {
+			RunID    int `json:"run_id"`
+			Attempts []struct {
+				RunAttempt        int    `json:"run_attempt"`
+				JobID             int    `json:"job_id"`
+				JobStartedAt      string `json:"job_started_at"`
+				JobCompletedAt    string `json:"job_completed_at"`
+				ArtifactID        int    `json:"artifact_id"`
+				ArtifactDigest    string `json:"artifact_digest"`
+				ArtifactCreatedAt string `json:"artifact_created_at"`
+				ArtifactUpdatedAt string `json:"artifact_updated_at"`
+			} `json:"attempts"`
+		} `json:"ci_effort_reproduction"`
+	}
+	if err := json.Unmarshal(fixtureData, &fixture); err != nil {
+		return nil, fmt.Errorf("decode immutable retry fixture: %w", err)
+	}
+	if fixture.CI.RunID != 33365730015 || len(fixture.CI.Attempts) != 2 || fixture.CI.Attempts[0].RunAttempt != 1 || fixture.CI.Attempts[1].RunAttempt != 2 {
+		return nil, errors.New("immutable retry fixture is not the expected attempt-1/attempt-2 lineage")
+	}
+	for _, attempt := range fixture.CI.Attempts {
+		start := attempt.JobStartedAt
+		end := attempt.JobCompletedAt
+		line := OperationLine{
+			RecordType:        "retry_lineage",
+			LineageID:         fmt.Sprintf("ci-effort:run:%d", fixture.CI.RunID),
+			CaseID:            "immutable-counterexample",
+			ObservationID:     fmt.Sprintf("ci-effort-attempt-%d", attempt.RunAttempt),
+			OperationID:       fmt.Sprintf("github-actions:ci-effort:run:%d", fixture.CI.RunID),
+			RunID:             fmt.Sprintf("%d", fixture.CI.RunID),
+			JobID:             fmt.Sprintf("%d", attempt.JobID),
+			Provider:          "github-actions",
+			Scope:             "ci-effort-retry",
+			ClockDomain:       "github.actions.job.api.v1",
+			StartedAt:         &start,
+			CompletedAt:       &end,
+			ArtifactID:        fmt.Sprintf("%d", attempt.ArtifactID),
+			ArtifactDigest:    attempt.ArtifactDigest,
+			ArtifactCreatedAt: attempt.ArtifactCreatedAt,
+			ArtifactUpdatedAt: attempt.ArtifactUpdatedAt,
+			Attempt:           attempt.RunAttempt,
+			Decision:          StateRefuted,
+		}
+		data, err := json.Marshal(line)
+		if err != nil {
+			return nil, err
+		}
+		b.Write(data)
+		b.WriteByte('\n')
 	}
 	return []byte(b.String()), nil
 }
@@ -171,7 +224,7 @@ func MeasureRuntimeStats(start time.Time) RuntimeStats {
 		WallMS:     time.Since(start).Nanoseconds() / int64(time.Millisecond),
 		PeakRSSKiB: PeakRSSKiB(),
 		MeasuredBy: "go-time-and-getrusage-rusage-self",
-		Scope:      "parse-ir-generate-evaluate-replay-inventory-and-serialize-before-report-write",
+		Scope:      "parse-ir-generate-evaluate-replay-and-inventory-before-json-serialization",
 	}
 }
 
