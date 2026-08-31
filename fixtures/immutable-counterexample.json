@@ -1,0 +1,135 @@
+{
+  "schema": "gooo/ci-time-causality/immutable-counterexample/v1",
+  "source_repository": "kimjooyoon/meta-ontology-go",
+  "source_api": "https://api.github.com/repos/kimjooyoon/meta-ontology-go",
+  "pull_request": {
+    "number": 615,
+    "state": "open",
+    "base_ref": "dev",
+    "head_ref": "agent/foundation-authorization-dispatch-adoption-20260831",
+    "head_sha": "7087f0cb11840f0c0fead83b6d375e8478c7d902",
+    "updated_at": "2026-08-31T06:49:07Z",
+    "url": "https://github.com/kimjooyoon/meta-ontology-go/pull/615"
+  },
+  "source_ci": {
+    "run_id": 33365730047,
+    "run_number": 3412,
+    "workflow": "CI [PR authoritative]",
+    "workflow_id": 332218049,
+    "event": "pull_request",
+    "status": "completed",
+    "conclusion": "success",
+    "run_attempt": 1,
+    "created_at": "2026-08-31T06:49:10Z",
+    "run_started_at": "2026-08-31T06:49:10Z",
+    "updated_at": "2026-08-31T07:00:26Z",
+    "head_sha": "7087f0cb11840f0c0fead83b6d375e8478c7d902",
+    "workflow_source_path": ".github/workflows/ci.yml",
+    "workflow_window": {
+      "start_at": "2026-08-31T06:49:29Z",
+      "end_at": "2026-08-31T07:00:25Z",
+      "wall_ms": 656000,
+      "interval_model": "github-rest-iso8601-second-value-v1",
+      "timestamp_resolution_ms": 1000,
+      "job_interval_count": 11,
+      "step_interval_count": 111
+    },
+    "evidence_artifact": {
+      "id": 9748422369,
+      "name": "ci-evidence-33365730047-1",
+      "size_in_bytes": 2863,
+      "expired": false,
+      "created_at": "2026-08-31T06:59:04Z",
+      "updated_at": "2026-08-31T06:59:04Z",
+      "digest": "sha256:98c00e9ce060f5f7cd7d8184d7dd7f60c081588dd247c7c18187df5c5d477f7f"
+    }
+  },
+  "opentofu": {
+    "run_id": 33365730033,
+    "run_number": 239,
+    "workflow": "OpenTofu released-CLI observation",
+    "workflow_id": 345252954,
+    "event": "pull_request",
+    "status": "completed",
+    "conclusion": "success",
+    "run_attempt": 1,
+    "created_at": "2026-08-31T06:49:10Z",
+    "run_started_at": "2026-08-31T06:49:10Z",
+    "updated_at": "2026-08-31T06:50:29Z",
+    "head_sha": "7087f0cb11840f0c0fead83b6d375e8478c7d902",
+    "job": {
+      "id": 99405871000,
+      "name": "OpenTofu released-CLI observation",
+      "started_at": "2026-08-31T06:49:54Z",
+      "completed_at": "2026-08-31T06:50:28Z",
+      "conclusion": "success"
+    },
+    "artifact": {
+      "id": 9748229760,
+      "name": "opentofu-observation-7087f0cb11840f0c0fead83b6d375e8478c7d902",
+      "size_in_bytes": 69972,
+      "expired": false,
+      "created_at": "2026-08-31T06:50:26Z",
+      "updated_at": "2026-08-31T06:50:26Z",
+      "digest": "sha256:72f4ded33ab86f4b8c7b527ac47ae4809ea7c92a3b0e0f914c304c7e82589137"
+    }
+  },
+  "ci_effort_reproduction": {
+    "run_id": 33365730015,
+    "run_number": 268,
+    "workflow_id": 345602084,
+    "head_sha": "7087f0cb11840f0c0fead83b6d375e8478c7d902",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-08-31T06:49:10Z",
+    "run_started_at": "2026-08-31T06:49:10Z",
+    "updated_at": "2026-08-31T07:03:22Z",
+    "attempts": [
+      {
+        "run_attempt": 1,
+        "job_id": 99405870188,
+        "job_name": "CI effort observation",
+        "job_status": "completed",
+        "job_conclusion": "failure",
+        "job_started_at": "2026-08-31T06:49:36Z",
+        "job_completed_at": "2026-08-31T07:00:52Z",
+        "artifact_id": 9748462083,
+        "artifact_name": "ci-effort-observation-7087f0cb11840f0c0fead83b6d375e8478c7d902",
+        "artifact_size_in_bytes": 97110,
+        "artifact_expired": false,
+        "artifact_created_at": "2026-08-31T07:00:51Z",
+        "artifact_updated_at": "2026-08-31T07:00:51Z",
+        "artifact_expires_at": "2026-09-30T07:00:50Z",
+        "artifact_digest": "sha256:74b24a4c24acd853f5d661aa5ad88b64f56dd8186d98288f87981fd7b4bd3979"
+      },
+      {
+        "run_attempt": 2,
+        "job_id": 99408612206,
+        "job_name": "CI effort observation",
+        "job_status": "completed",
+        "job_conclusion": "failure",
+        "job_started_at": "2026-08-31T07:02:53Z",
+        "job_completed_at": "2026-08-31T07:03:21Z",
+        "artifact_id": 9748520364,
+        "artifact_name": "ci-effort-observation-7087f0cb11840f0c0fead83b6d375e8478c7d902",
+        "artifact_size_in_bytes": 97110,
+        "artifact_expired": false,
+        "artifact_created_at": "2026-08-31T07:03:20Z",
+        "artifact_updated_at": "2026-08-31T07:03:20Z",
+        "artifact_expires_at": "2026-09-30T07:03:19Z",
+        "artifact_digest": "sha256:1d0218ed0945ef76ea9cc396ad7a9e0916bc6243ebf6be0fe04efc8e9878b656"
+      }
+    ],
+    "observed_decisions": ["KNOWN_VERIFICATION_CONTRADICTION", "OPERATION_DURATION_NEGATIVE"],
+    "source_api_urls": {
+      "run": "https://api.github.com/repos/kimjooyoon/meta-ontology-go/actions/runs/33365730015",
+      "attempt_1_job": "https://api.github.com/repos/kimjooyoon/meta-ontology-go/actions/jobs/99405870188",
+      "attempt_2_job": "https://api.github.com/repos/kimjooyoon/meta-ontology-go/actions/jobs/99408612206",
+      "attempt_1_artifact": "https://api.github.com/repos/kimjooyoon/meta-ontology-go/actions/artifacts/9748462083",
+      "attempt_2_artifact": "https://api.github.com/repos/kimjooyoon/meta-ontology-go/actions/artifacts/9748520364"
+    }
+  },
+  "boundary_rule": "Source CI and OpenTofu are separate observations; no timestamp from a different run, job, provider, or operation identity may be subtracted.",
+  "fixture_is": "public-api-snapshot",
+  "fixture_is_not": ["old-Guardian-failure", "live-requery-at-test-time", "cross-project-required-gate"]
+}

@@ -1,0 +1,15 @@
+package ci_time_causality
+namespace ci_time_causality
+
+activity BindOperationIdentity(OperationObservation) -> OperationIdentity
+activity BindClockDomain(OperationObservation) -> ClockDomainBinding
+activity ObserveStartTime(OperationObservation) -> StartTimeObservation
+activity ObserveEndTime(OperationObservation) -> EndTimeObservation
+activity EnforceMonotonicOrder(StartTimeObservation) -> ClockOrderDecision
+activity DeriveDuration(ClockOrderDecision) -> DurationObservation
+activity PreserveSourceCIBoundary(DurationObservation) -> SourceCIObservation
+activity PreserveOpenTofuBoundary(DurationObservation) -> OpenTofuObservation
+activity AppendRetryLineage(OperationObservation) -> RetryLineage
+activity RefuteNegativeDuration(DurationObservation) -> Refutation
+activity ReplayDeterministically(DurationObservation) -> ReplayReceipt
+activity EmitHumanReport(ReplayReceipt) -> HumanReport
