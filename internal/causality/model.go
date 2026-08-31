@@ -143,22 +143,22 @@ type Inventory struct {
 }
 
 type OperationLine struct {
-	RecordType     string  `json:"record_type"`
-	LineageID      string  `json:"lineage_id,omitempty"`
-	CaseID         string  `json:"case_id"`
-	ObservationID  string  `json:"observation_id"`
-	OperationID    string  `json:"operation_id"`
-	RunID          string  `json:"run_id"`
-	JobID          string  `json:"job_id"`
-	Provider       string  `json:"provider"`
-	Scope          string  `json:"scope"`
-	ClockDomain    string  `json:"clock_domain"`
-	StartedAt      *string `json:"started_at"`
-	CompletedAt    *string `json:"completed_at"`
-	ArtifactID     string  `json:"artifact_id"`
-	ArtifactDigest string  `json:"artifact_digest"`
-	ArtifactCreatedAt string `json:"artifact_created_at,omitempty"`
-	ArtifactUpdatedAt string `json:"artifact_updated_at,omitempty"`
+	RecordType        string  `json:"record_type"`
+	LineageID         string  `json:"lineage_id,omitempty"`
+	CaseID            string  `json:"case_id"`
+	ObservationID     string  `json:"observation_id"`
+	OperationID       string  `json:"operation_id"`
+	RunID             string  `json:"run_id"`
+	JobID             string  `json:"job_id"`
+	Provider          string  `json:"provider"`
+	Scope             string  `json:"scope"`
+	ClockDomain       string  `json:"clock_domain"`
+	StartedAt         *string `json:"started_at"`
+	CompletedAt       *string `json:"completed_at"`
+	ArtifactID        string  `json:"artifact_id"`
+	ArtifactDigest    string  `json:"artifact_digest"`
+	ArtifactCreatedAt string  `json:"artifact_created_at,omitempty"`
+	ArtifactUpdatedAt string  `json:"artifact_updated_at,omitempty"`
 	Attempt        int     `json:"attempt"`
 	Decision       string  `json:"decision"`
 }
