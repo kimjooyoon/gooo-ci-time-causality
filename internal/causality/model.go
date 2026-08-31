@@ -159,8 +159,8 @@ type OperationLine struct {
 	ArtifactDigest    string  `json:"artifact_digest"`
 	ArtifactCreatedAt string  `json:"artifact_created_at,omitempty"`
 	ArtifactUpdatedAt string  `json:"artifact_updated_at,omitempty"`
-	Attempt        int     `json:"attempt"`
-	Decision       string  `json:"decision"`
+	Attempt           int     `json:"attempt"`
+	Decision          string  `json:"decision"`
 }
 
 type DurationReceipt struct {
