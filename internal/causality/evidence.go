@@ -80,7 +80,7 @@ func BuildOperations(cases []DurationCase, results []CaseResult) ([]byte, error)
 	return []byte(b.String()), nil
 }
 
-func Inventory(root string) (Inventory, error) {
+func CountInventory(root string) (Inventory, error) {
 	result := Inventory{InputDirs: 1}
 	err := filepath.WalkDir(root, func(path string, entry fs.DirEntry, walkErr error) error {
 		if walkErr != nil {

@@ -122,7 +122,7 @@ func Run(options RunOptions) error {
 	if err != nil {
 		return err
 	}
-	inventory, err := Inventory(options.InventoryRoot)
+	inventory, err := CountInventory(options.InventoryRoot)
 	if err != nil {
 		return fmt.Errorf("inventory: %w", err)
 	}
