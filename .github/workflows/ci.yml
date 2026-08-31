@@ -31,7 +31,7 @@ jobs:
           GOFLAGS: -mod=readonly
           GOTOOLCHAIN: local
         run: |
-          gofmt -l cmd internal
+          gofmt -d cmd internal
           test -z "$(gofmt -l cmd internal)"
           go vet ./...
           go test ./...
