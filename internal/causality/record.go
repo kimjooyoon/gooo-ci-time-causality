@@ -11,11 +11,11 @@ import (
 )
 
 type RunOptions struct {
-	SourcePath  string
-	ContractPath string
-	CorpusPath  string
-	FixturePath string
-	OutputDir   string
+	SourcePath    string
+	ContractPath  string
+	CorpusPath    string
+	FixturePath   string
+	OutputDir     string
 	InventoryRoot string
 }
 
@@ -103,9 +103,9 @@ func Run(options RunOptions) error {
 		FirstEvaluationDigest:  Digest(firstCanonical),
 		SecondEvaluationDigest: Digest(secondCanonical),
 		Deterministic:          string(firstCanonical) == string(secondCanonical),
-		ReplayCount:             2,
-		Decision:                StateClosed,
-		Reason:                  "DETERMINISTIC_CASE_REPLAY",
+		ReplayCount:            2,
+		Decision:               StateClosed,
+		Reason:                 "DETERMINISTIC_CASE_REPLAY",
 	}
 	if !replay.Deterministic {
 		return errors.New("deterministic replay mismatch")
@@ -186,10 +186,10 @@ func Run(options RunOptions) error {
 	reportData := []byte(buildHumanReport(manifest, manifestDigest, outputDigests, replay, firstResults))
 	files := map[string][]byte{
 		"time-manifest.json":    manifestData,
-		"operations.ndjson":    operationsData,
-		"clock-domains.json":   clockDomainsData,
+		"operations.ndjson":     operationsData,
+		"clock-domains.json":    clockDomainsData,
 		"duration-receipt.json": durationData,
-		"replay-receipt.json":  replayData,
+		"replay-receipt.json":   replayData,
 		"time-report.md":        reportData,
 	}
 	for _, name := range ArtifactFiles {
@@ -222,8 +222,8 @@ type clockDomain struct {
 }
 
 type clockDomainDocument struct {
-	Schema string        `json:"schema"`
-	Rule   string        `json:"rule"`
+	Schema  string        `json:"schema"`
+	Rule    string        `json:"rule"`
 	Domains []clockDomain `json:"domains"`
 }
 

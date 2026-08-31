@@ -54,20 +54,20 @@ func BuildOperations(cases []DurationCase, results []CaseResult) ([]byte, error)
 	for _, item := range cases {
 		for _, observation := range item.Observations {
 			line := OperationLine{
-				CaseID:          item.CaseID,
-				ObservationID:   observation.ObservationID,
-				OperationID:     observation.OperationID,
-				RunID:           observation.RunID,
-				JobID:           observation.JobID,
-				Provider:        observation.Provider,
-				Scope:           observation.Scope,
-				ClockDomain:     observation.ClockDomain,
-				StartedAt:       observation.StartedAt,
-				CompletedAt:     observation.CompletedAt,
-				ArtifactID:      observation.ArtifactID,
-				ArtifactDigest:  observation.ArtifactDigest,
-				Attempt:         observation.Attempt,
-				Decision:        decisionByCase[item.CaseID],
+				CaseID:         item.CaseID,
+				ObservationID:  observation.ObservationID,
+				OperationID:    observation.OperationID,
+				RunID:          observation.RunID,
+				JobID:          observation.JobID,
+				Provider:       observation.Provider,
+				Scope:          observation.Scope,
+				ClockDomain:    observation.ClockDomain,
+				StartedAt:      observation.StartedAt,
+				CompletedAt:    observation.CompletedAt,
+				ArtifactID:     observation.ArtifactID,
+				ArtifactDigest: observation.ArtifactDigest,
+				Attempt:        observation.Attempt,
+				Decision:       decisionByCase[item.CaseID],
 			}
 			data, err := json.Marshal(line)
 			if err != nil {

@@ -7,10 +7,10 @@ func TestControlledCorpusContract(t *testing.T) {
 	// contract executable without making local verification part of the protocol.
 	results := EvaluateCases([]DurationCase{
 		{
-			CaseID:           "positive",
-			Category:         StateClosed,
-			ExpectedDecision: StateClosed,
-			ExpectedReason:   "DURATION_DERIVED",
+			CaseID:             "positive",
+			Category:           StateClosed,
+			ExpectedDecision:   StateClosed,
+			ExpectedReason:     "DURATION_DERIVED",
 			StartObservationID: "one",
 			EndObservationID:   "one",
 			Observations: []Observation{{
