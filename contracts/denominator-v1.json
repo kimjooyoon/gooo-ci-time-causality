@@ -1,0 +1,36 @@
+{
+  "schema": "gooo/ci-time-causality/denominator/v1",
+  "contract_id": "ci-time-causality-v1",
+  "precedence": ["REFUTED", "UNKNOWN", "CLOSED"],
+  "cells": [
+    {"ordinal": 1, "id": "OPERATION_IDENTITY", "activity": "BindOperationIdentity", "artifact": "operations.ndjson", "evaluator": "generated/evaluator.go"},
+    {"ordinal": 2, "id": "CLOCK_DOMAIN", "activity": "BindClockDomain", "artifact": "clock-domains.json", "evaluator": "generated/evaluator.go"},
+    {"ordinal": 3, "id": "START_TIME", "activity": "ObserveStartTime", "artifact": "operations.ndjson", "evaluator": "generated/evaluator.go"},
+    {"ordinal": 4, "id": "END_TIME", "activity": "ObserveEndTime", "artifact": "operations.ndjson", "evaluator": "generated/evaluator.go"},
+    {"ordinal": 5, "id": "MONOTONIC_ORDER", "activity": "EnforceMonotonicOrder", "artifact": "duration-receipt.json", "evaluator": "generated/evaluator.go"},
+    {"ordinal": 6, "id": "DURATION_DERIVATION", "activity": "DeriveDuration", "artifact": "duration-receipt.json", "evaluator": "generated/evaluator.go"},
+    {"ordinal": 7, "id": "SOURCE_CI_BOUNDARY", "activity": "PreserveSourceCIBoundary", "artifact": "operations.ndjson", "evaluator": "generated/evaluator.go"},
+    {"ordinal": 8, "id": "OPENTOFU_BOUNDARY", "activity": "PreserveOpenTofuBoundary", "artifact": "operations.ndjson", "evaluator": "generated/evaluator.go"},
+    {"ordinal": 9, "id": "RETRY_LINEAGE", "activity": "AppendRetryLineage", "artifact": "operations.ndjson", "evaluator": "generated/evaluator.go"},
+    {"ordinal": 10, "id": "NEGATIVE_DURATION_REFUTATION", "activity": "RefuteNegativeDuration", "artifact": "duration-receipt.json", "evaluator": "generated/evaluator.go"},
+    {"ordinal": 11, "id": "DETERMINISTIC_REPLAY", "activity": "ReplayDeterministically", "artifact": "replay-receipt.json", "evaluator": "generated/evaluator.go"},
+    {"ordinal": 12, "id": "HUMAN_REPORT", "activity": "EmitHumanReport", "artifact": "time-report.md", "evaluator": "human-report-writer"}
+  ],
+  "executable_cases": {"total": 12, "CLOSED": 3, "UNKNOWN": 4, "REFUTED": 5},
+  "artifact_files": [
+    "time-manifest.json",
+    "operations.ndjson",
+    "clock-domains.json",
+    "duration-receipt.json",
+    "replay-receipt.json",
+    "time-report.md"
+  ],
+  "authority": {
+    "verification": "github-actions",
+    "go_version": "1.27",
+    "repository_writes": 0,
+    "local_test_executions": 0,
+    "cross_project_required_gates": 0,
+    "root_readme_in_inventory": false
+  }
+}

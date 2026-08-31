@@ -1,0 +1,115 @@
+name: CI-only time causality
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    tags: ["v*"]
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  record:
+    name: record-and-conform
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v5
+
+      - name: Set up Go 1.27
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.27.x"
+          check-latest: true
+
+      - name: Verify formatting, vet, and tests in Actions
+        env:
+          GOWORK: off
+          GOFLAGS: -mod=readonly
+          GOTOOLCHAIN: local
+        run: |
+          test -z "$(gofmt -l cmd internal)"
+          go vet ./...
+          go test ./...
+
+      - name: Build recorder
+        env:
+          GOWORK: off
+          GOFLAGS: -mod=readonly
+          GOTOOLCHAIN: local
+        run: go build -trimpath -o "$RUNNER_TEMP/gooo-ci-time-causality" ./cmd/time-causality
+
+      - name: Generate IR, evaluator, corpus results, and six outputs
+        env:
+          GOWORK: off
+          GOFLAGS: -mod=readonly
+          GOTOOLCHAIN: local
+        run: |
+          mkdir -p "$RUNNER_TEMP/gooo-ci-time-causality-output"
+          "$RUNNER_TEMP/gooo-ci-time-causality" \
+            --source examples/time-causality/main.gooo \
+            --contract contracts/denominator-v1.json \
+            --corpus fixtures/cases.ndjson \
+            --fixture fixtures/immutable-counterexample.json \
+            --inventory-root . \
+            --out "$RUNNER_TEMP/gooo-ci-time-causality-output"
+          test -f "$RUNNER_TEMP/working/ir.json" || test -f "$RUNNER_TEMP/gooo-ci-time-causality-working/ir.json"
+
+      - name: Verify six output contract
+        run: |
+          output="$RUNNER_TEMP/gooo-ci-time-causality-output"
+          test "$(find "$output" -maxdepth 1 -type f | wc -l | tr -d ' ')" = "6"
+          for file in time-manifest.json operations.ndjson clock-domains.json duration-receipt.json replay-receipt.json time-report.md; do
+            test -f "$output/$file"
+          done
+          jq -e '.activity_count == 12 and .cell_count == 12 and .activity_cell_one_to_one == true and .artifact_count == 6 and .summary == {"total":12,"closed":3,"unknown":4,"refuted":5} and .repository_writes == 0 and .local_test_executions == 0 and .cross_project_required_gates == 0 and .root_readme_in_inventory == false' "$output/time-manifest.json" >/dev/null
+          jq -e '.summary == {"total":12,"closed":3,"unknown":4,"refuted":5} and ([.results[].decision] | map(select(. == "CLOSED")) | length) == 3 and ([.results[].decision] | map(select(. == "UNKNOWN")) | length) == 4 and ([.results[].decision] | map(select(. == "REFUTED")) | length) == 5' "$output/duration-receipt.json" >/dev/null
+          jq -e '.deterministic == true and .replay_count == 2 and .first_evaluation_digest == .second_evaluation_digest' "$output/replay-receipt.json" >/dev/null
+          jq -e '.retry_attempts == [1,2]' "$output/time-manifest.json" >/dev/null
+          jq -s -e '([.[] | select(.record_type == "retry_lineage")] | length) == 2 and ([.[] | select(.record_type == "retry_lineage") | .attempt] == [1,2])' "$output/operations.ndjson" >/dev/null
+          grep -Eq 'REFUTED_CLOCK_ORDER|MALFORMED_TIMEZONE|CLAMP_TO_ZERO_FORBIDDEN' "$output/time-report.md"
+
+      - name: Upload time manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: time-manifest.json
+          path: ${{ runner.temp }}/gooo-ci-time-causality-output/time-manifest.json
+          if-no-files-found: error
+
+      - name: Upload operations
+        uses: actions/upload-artifact@v4
+        with:
+          name: operations.ndjson
+          path: ${{ runner.temp }}/gooo-ci-time-causality-output/operations.ndjson
+          if-no-files-found: error
+
+      - name: Upload clock domains
+        uses: actions/upload-artifact@v4
+        with:
+          name: clock-domains.json
+          path: ${{ runner.temp }}/gooo-ci-time-causality-output/clock-domains.json
+          if-no-files-found: error
+
+      - name: Upload duration receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: duration-receipt.json
+          path: ${{ runner.temp }}/gooo-ci-time-causality-output/duration-receipt.json
+          if-no-files-found: error
+
+      - name: Upload replay receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: replay-receipt.json
+          path: ${{ runner.temp }}/gooo-ci-time-causality-output/replay-receipt.json
+          if-no-files-found: error
+
+      - name: Upload human report
+        uses: actions/upload-artifact@v4
+        with:
+          name: time-report.md
+          path: ${{ runner.temp }}/gooo-ci-time-causality-output/time-report.md
+          if-no-files-found: error
