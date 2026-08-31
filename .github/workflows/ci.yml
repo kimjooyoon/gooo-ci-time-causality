@@ -68,7 +68,7 @@ jobs:
           jq -e '.activity_count == 12 and .cell_count == 12 and .activity_cell_one_to_one == true and .artifact_count == 6 and .summary == {"total":12,"closed":3,"unknown":4,"refuted":5} and .repository_writes == 0 and .local_test_executions == 0 and .cross_project_required_gates == 0 and .root_readme_in_inventory == false' "$output/time-manifest.json" >/dev/null
           jq -e '.summary == {"total":12,"closed":3,"unknown":4,"refuted":5} and ([.results[].decision] | map(select(. == "CLOSED")) | length) == 3 and ([.results[].decision] | map(select(. == "UNKNOWN")) | length) == 4 and ([.results[].decision] | map(select(. == "REFUTED")) | length) == 5' "$output/duration-receipt.json" >/dev/null
           jq -e '.deterministic == true and .replay_count == 2 and .first_evaluation_digest == .second_evaluation_digest' "$output/replay-receipt.json" >/dev/null
-          rg -q 'REFUTED_CLOCK_ORDER|MALFORMED_TIMEZONE|CLAMP_TO_ZERO_FORBIDDEN' "$output/time-report.md"
+          grep -Eq 'REFUTED_CLOCK_ORDER|MALFORMED_TIMEZONE|CLAMP_TO_ZERO_FORBIDDEN' "$output/time-report.md"
 
       - name: Upload time manifest
         uses: actions/upload-artifact@v4
