@@ -72,6 +72,19 @@ jobs:
           jq -s -e '([.[] | select(.record_type == "retry_lineage")] | length) == 2 and ([.[] | select(.record_type == "retry_lineage") | .attempt] == [1,2])' "$output/operations.ndjson" >/dev/null
           grep -Eq 'REFUTED_CLOCK_ORDER|MALFORMED_TIMEZONE|CLAMP_TO_ZERO_FORBIDDEN' "$output/time-report.md"
 
+      - name: Verify append-only post-release audit receipt
+        run: |
+          test "$(wc -l < release-history/post-release-audit.ndjson | tr -d ' ')" = "6"
+          jq -s -e '
+            (map(.sequence) == [1,2,3,4,5,6]) and
+            (.[0].record_type == "release_snapshot") and
+            (.[1].status == "FAILED" and .[1].success_counted == false and .[1].query_field == "Release.isImmutable") and
+            (.[2].status == "SUCCEEDED" and .[2].success_counted == true and .[2].query_field == "Release.immutable" and .[2].immutable == true) and
+            (.[3].status == "FAILED" and .[3].success_counted == false and .[3].failure_code == "SHELL_VARIABLE_PATH_COLLISION") and
+            (.[4].status == "SUCCEEDED" and .[4].success_counted == true and .[4].local_digest_match_count == 6) and
+            (.[5].record_type == "audit_summary" and .[5].post_release_audit_attempts == 4 and .[5].local_execution_counts.go == 0 and .[5].local_execution_counts.node == 0 and .[5].local_execution_counts.harness == 0 and .[5].local_execution_counts.conformance == 0 and .[5].local_execution_counts.tests == 0 and .[5].case_summary == {"total":12,"CLOSED":3,"UNKNOWN":4,"REFUTED":5})
+          ' release-history/post-release-audit.ndjson >/dev/null
+
       - name: Upload time manifest
         uses: actions/upload-artifact@v4
         with:

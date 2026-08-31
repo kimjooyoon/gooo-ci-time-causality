@@ -147,7 +147,7 @@ func CountInventory(root string) (Inventory, error) {
 			return nil
 		}
 		if entry.IsDir() {
-			if relative == ".git" || relative == ".github" || strings.HasPrefix(relative, ".git"+string(filepath.Separator)) || strings.HasPrefix(relative, ".github"+string(filepath.Separator)) {
+			if relative == ".git" || relative == ".github" || relative == "release-history" || strings.HasPrefix(relative, ".git"+string(filepath.Separator)) || strings.HasPrefix(relative, ".github"+string(filepath.Separator)) || strings.HasPrefix(relative, "release-history"+string(filepath.Separator)) {
 				return filepath.SkipDir
 			}
 			result.InputDirs++

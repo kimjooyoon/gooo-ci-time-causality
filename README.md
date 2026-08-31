@@ -40,3 +40,12 @@ See [contracts/denominator-v1.json](contracts/denominator-v1.json) for the
 fixed cells, [fixtures/cases.ndjson](fixtures/cases.ndjson) for the corpus,
 and [fixtures/immutable-counterexample.json](fixtures/immutable-counterexample.json)
 for the public API evidence that motivated this repository.
+
+## Release history
+
+Post-release audit attempts are recorded append-only in
+[release-history/post-release-audit.ndjson](release-history/post-release-audit.ndjson).
+The receipt keeps failed GraphQL and checksum attempts visible without counting
+them as successful product verification. Its local Go, Node, harness,
+conformance, and test execution counts remain zero. `release-history/` is
+provenance metadata and is excluded from the recorder's product input inventory.
