@@ -183,15 +183,15 @@ type ReplayReceipt struct {
 	FirstEvaluationDigest  string `json:"first_evaluation_digest"`
 	SecondEvaluationDigest string `json:"second_evaluation_digest"`
 	Deterministic          bool   `json:"deterministic"`
-	ReplayCount             int    `json:"replay_count"`
-	Decision                string `json:"decision"`
-	Reason                  string `json:"reason"`
+	ReplayCount            int    `json:"replay_count"`
+	Decision               string `json:"decision"`
+	Reason                 string `json:"reason"`
 }
 
 type OutputDigest struct {
 	Name   string `json:"name"`
 	SHA256 string `json:"sha256"`
-	Bytes  int   `json:"bytes"`
+	Bytes  int    `json:"bytes"`
 }
 
 type Manifest struct {
